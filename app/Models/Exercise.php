@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'description', 'metrics'])]
 class Exercise extends Model
@@ -20,6 +21,11 @@ class Exercise extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function workoutExercises(): HasMany
+    {
+        return $this->hasMany(WorkoutExercise::class);
     }
 
     public function scopeVisibleTo(Builder $query, User $user): void

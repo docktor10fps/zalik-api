@@ -27,6 +27,10 @@ class ExerciseService
 
     public function delete(Exercise $exercise): void
     {
+        if ($exercise->workoutExercises()->exists()) {
+            abort(409, 'Exercise is used in a workout');
+        }
+
         $exercise->delete();
     }
 }

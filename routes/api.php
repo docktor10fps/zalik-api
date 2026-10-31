@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\WorkoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -18,4 +19,5 @@ Route::prefix('auth')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('exercises', ExerciseController::class)->except('show');
+    Route::apiResource('workouts', WorkoutController::class);
 });
