@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\SessionSetController;
+use App\Http\Controllers\WorkoutController;
+use App\Http\Controllers\WorkoutSessionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
@@ -13,4 +17,14 @@ Route::prefix('auth')->group(function () {
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);
     });
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('exercises', ExerciseController::class)->except('show');
+    Route::apiResource('workouts', WorkoutController::class);
+
+    Route::apiResource('workout-sessions', WorkoutSessionController::class);
+    Route::post('workout-sessions/{workout_session}/finish', [WorkoutSessionController::class, 'finish']);
+    Route::post('workout-sessions/{workout_session}/sets', [SessionSetController::class, 'store']);
+    Route::apiResource('session-sets', SessionSetController::class)->only(['update', 'destroy']);
 });
