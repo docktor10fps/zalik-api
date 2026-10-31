@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ExerciseMetricEnum;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -28,10 +29,28 @@ class Exercise extends Model
         return $this->hasMany(WorkoutExercise::class);
     }
 
+    public function sessionSets(): HasMany
+    {
+        return $this->hasMany(SessionSet::class);
+    }
+
     public function scopeVisibleTo(Builder $query, User $user): void
     {
         $query->where(fn ($query) => $query
             ->whereNull('user_id')
             ->orWhere('user_id', $user->id));
+    }
+
+    public function metricRules(): array
+    {
+        $rules = [];
+
+        foreach (ExerciseMetricEnum::cases() as $metric) {
+            $rules[$metric->value] = in_array($metric->value, $this->metrics)
+                ? $metric->rules()
+                : ['prohibited'];
+        }
+
+        return $rules;
     }
 }
